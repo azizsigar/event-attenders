@@ -1,10 +1,35 @@
 import User from "../models/userModel.js";
-import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import axios from "axios";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { AvatarGenerator } from "random-avatar-generator";
+
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
+export const profile = async (req, res) => {
+  try {
+    // Get the user ID from the request
+    const userId = req.userId;
+    // Find the user in the database
+    const user = await User.findById(userId);
+    // Respond with the user data
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getRandomAvatar = async () => {
+  try {
+    const response = await axios.get(
+      "https://xsgames.co/randomusers/avatar.php?g=pixel"
+    );
+    return response.data; // Assuming the response is the URL as plain text
+  } catch (error) {
+    console.error("Error fetching avatar:", error);
+    return null; // Return null or a default avatar URL if fetching fails
+  }
+};
 export const addUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -46,17 +71,20 @@ export const addUser = async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const generator = new AvatarGenerator();
+    const avatarUrl = generator.generateRandomAvatar();
 
     // Create the new user (MongoDB automatically generates _id)
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
+      avatar: avatarUrl, // Save the avatar URL with the user
     });
 
     // Save the user to the database
     await newUser.save();
-   
+
     // Respond with success
     res.status(201).json({ message: "User added" });
   } catch (error) {

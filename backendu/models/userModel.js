@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  avatar: {
+    type: String, // Store the avatar URL as a string
+  },
 });
 
 // Export the User model
