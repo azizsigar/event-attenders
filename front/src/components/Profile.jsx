@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../axios.jsx";
 import { useNavigate } from "react-router-dom";
 import Login from "./Login.jsx";
+import { Link } from "react-router-dom";  
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -76,6 +77,8 @@ export default function Profile() {
         {user.email ? user.email : "Email not available"}{" "}
         {/* Check if email is available */}
       </p>
+      <Link to="/">Create</Link>
+      <Link to="/getall">Items</Link>
     </div>
   );
 }

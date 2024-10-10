@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import "./App.css";
 import AddItemForm from "./components/AddItemForm";
+import ItemList from "./components/ItemList";
 function App() {
   return (
     <Router>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<AddItemForm />} />
+        <Route path="/getall" element={<ItemList />} />
       </Routes>
     </Router>
   );

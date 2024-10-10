@@ -16,7 +16,6 @@ export default function Navbar({ isLoggedIn }) {
         {/* Always show Profile link */}
         <li>
           <Link to="/profile">Profile</Link>
-          <Link to="/">Create</Link>
         </li>
       </ul>
     </nav>
