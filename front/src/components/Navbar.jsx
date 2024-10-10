@@ -11,12 +11,12 @@ export default function Navbar({ isLoggedIn }) {
             <li>
               <Link to="/login">Login</Link>
             </li>
-            
           </>
         )}
         {/* Always show Profile link */}
         <li>
           <Link to="/profile">Profile</Link>
+          <Link to="/">Create</Link>
         </li>
       </ul>
     </nav>
