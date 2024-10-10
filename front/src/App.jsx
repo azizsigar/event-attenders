@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
-
+import "./App.css";
 function App() {
   return (
     <Router>
