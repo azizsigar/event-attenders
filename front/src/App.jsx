@@ -6,6 +6,8 @@ import Profile from "./components/Profile";
 import "./App.css";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
+import UpdateItemForm from "./components/UpdateItemForm"; // You already imported it
+
 function App() {
   return (
     <Router>
@@ -16,6 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<AddItemForm />} />
         <Route path="/getall" element={<ItemList />} />
+        <Route path="/update/:itemId" element={<UpdateItemForm />} />
       </Routes>
     </Router>
   );

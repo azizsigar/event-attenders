@@ -1,56 +1,60 @@
-import { useEffect, useState } from "react";
-import axios from "../axios.jsx"; // Assuming axios is already set up for the base URL
+import React, { useState, useEffect } from "react";
+import axios from "../axios.jsx";
+import UpdateItemForm from "./UpdateItemForm"; // Formu içeri al
+import { Link } from "react-router-dom";
 
 export default function ItemList() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [itemToUpdate, setItemToUpdate] = useState(null); // Güncellenecek item
 
   useEffect(() => {
     const fetchItems = async () => {
-      const token = localStorage.getItem("token"); // Retrieve the token
-
+      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get("/items/", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Attach JWT token for authentication
-          },
+        const response = await axios.get("/items", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        setItems(response.data); // Store the items in the state
-        setLoading(false);
+        setItems(response.data);
       } catch (err) {
         setError(err.response?.data?.message || "Error fetching items");
-        setLoading(false);
       }
     };
-
     fetchItems();
   }, []);
 
-  if (loading) return <p>Loading items...</p>;
+  const handleUpdateClick = (item) => {
+    setItemToUpdate(item); // Güncellenecek itemi ayarla
+  };
+
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="item-list">
-      <h2>Items for Sale</h2>
+    <div>
+      <h1>Your Items</h1>
       {items.length === 0 ? (
-        <p>No items found for this seller.</p>
+        <p>No items found</p>
       ) : (
         <ul>
           {items.map((item) => (
             <li key={item._id}>
-              <h3>{item.name}</h3>
+              <p>{item.name}</p>
               <p>{item.description}</p>
-              <p>Price: ${item.price}</p>
-              <p>Category: {item.category}</p>
-              <p>
-                Location: {item.location.city}, {item.location.country}
-              </p>
-              <img src={item.image} alt={item.name} width="150" />
+                  <p>{item.price} USD</p>
+                  
+              <button onClick={() => handleUpdateClick(item)}>Update</button>
             </li>
           ))}
         </ul>
+      )}
+
+      {/* Eğer bir item seçildiyse, güncelleme formunu göster */}
+      {itemToUpdate && (
+        <div>
+          <h2>Update Item: {itemToUpdate.name}</h2>
+          <h3>update item: {console.log(itemToUpdate._id)}</h3>
+          <UpdateItemForm itemId={itemToUpdate._id} />
+        </div>
       )}
     </div>
   );
