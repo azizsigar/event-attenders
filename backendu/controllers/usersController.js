@@ -80,11 +80,15 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    // Check if JWT_SECRET is defined
+    if (!JWT_SECRET) {
+      return res.status(500).json({ message: "JWT secret is not defined" });
+    }
+
     // Create a JWT token with necessary information
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
-
+      JWT_SECRET,
       { expiresIn: "1h" }
     );
     const seller = await User.findOne({ email: user.email });
@@ -96,5 +100,18 @@ export const login = async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    console.log(user.email);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
