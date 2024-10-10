@@ -1,25 +1,37 @@
 import { useEffect, useState } from "react";
 import axios from "../axios.jsx";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
+import Login from "./Login.jsx";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [avatarUrl, setAvatarUrl] = useState(null); // State for avatar URL
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); // Check if token exists
       if (!token) {
-        return; // Exit if no token
+        return;
       }
 
       try {
         const response = await axios.get("/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        console.log("User data:", response.data); // Check the response
-        setUser(response.data);
+
+        console.log("API Response:", response); // Check the complete API response
+
+        // Assuming response.data contains the user data
+        const userData = response.data;
+        setUser(userData);
+        console.log("userdata is :::",userData); // Check the user data
+
+        // Generate avatar URL using email as seed
+        const avatar = `https://api.dicebear.com/6.x/croodles/svg?seed=${userData.email}`;
+        setAvatarUrl(avatar); // Set the avatar URL
       } catch (error) {
         console.error("Failed to fetch user data", error);
       }
@@ -29,40 +41,40 @@ export default function Profile() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token
-    setUser(null); // Clear user state
-    navigate("/login"); // Redirect to login page after logout
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
   };
-  
 
   if (!user) {
-    return <p>No user data available</p>; // Show message if no user data
+    return (<Login/>)
   }
 
   return (
-    <div>
+    <div className="main">
       <h2>Profile</h2>
-      <button onClick={handleLogout}>Logout</button>{" "}
-      {/* Change button text to Logout */}
+      <button onClick={handleLogout}>Logout</button>
+      {avatarUrl && (
+        <img
+          src={avatarUrl}
+          alt="Avatar"
+          style={{ width: "10rem", height: "10rem" }}
+        />
+      )}
       <p>
         <strong>_id: </strong>
-        {user._id}
+        {user._id ? user._id : "User ID not available"}{" "}
+        {/* Check if _id is available */}
       </p>
       <p>
         <strong>Name: </strong>
-        {user.name}
+        {user.name ? user.name : "Name not available"}{" "}
+        {/* Check if name is available */}
       </p>
       <p>
         <strong>Email: </strong>
-        {user.email}
-      </p>
-      <p>
-        <strong>Password (hashed): </strong>
-        {user.password}
-      </p>
-      <p>
-        <strong>Created At: </strong>
-        {new Date(user.createdAt).toLocaleString()}
+        {user.email ? user.email : "Email not available"}{" "}
+        {/* Check if email is available */}
       </p>
     </div>
   );

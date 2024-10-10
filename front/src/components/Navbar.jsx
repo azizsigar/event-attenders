@@ -1,28 +1,20 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import "../App.css";
 
-export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    // Check if token exists to determine login state
-    setIsLoggedIn(!!token);
-  }, []);
-
+export default function Navbar({ isLoggedIn }) {
   return (
     <nav>
       <ul>
-        {!isLoggedIn && (
+        {/* Show Login and Register links only if not logged in */}
+        {isLoggedIn && (
           <>
             <li>
               <Link to="/login">Login</Link>
             </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
+            
           </>
         )}
+        {/* Always show Profile link */}
         <li>
           <Link to="/profile">Profile</Link>
         </li>

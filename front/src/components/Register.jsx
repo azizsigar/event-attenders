@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "../axios.jsx";
+import Login from "./Login.jsx";
+import { Link } from "react-router-dom";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -18,32 +20,38 @@ export default function Register() {
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || "Registration failed");
+      <Login/>
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Register</button>
-      {message && <p>{message}</p>}
-    </form>
+    <div className="main">
+      <form onSubmit={handleSubmit}>
+        <h2>Register</h2>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Register</button>
+        {message && <p>{message}</p>}
+      </form>
+      <li>
+        <Link to="/login">Login</Link>
+      </li>
+    </div>
   );
 }
